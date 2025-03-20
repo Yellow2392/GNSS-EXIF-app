@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -19,6 +20,8 @@ import android.os.Environment
 import android.util.Log
 import android.util.Size
 import android.view.TextureView
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -107,6 +110,27 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LocationListener 
                 return@setOnClickListener
             }
             capturePhoto()
+
+            val overlay = View(this).apply {
+                layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                setBackgroundColor(Color.WHITE)
+                alpha = 0f
+            }
+
+            (window.decorView as ViewGroup).addView(overlay)
+
+            overlay.animate()
+                .alpha(1f)
+                .setDuration(100)
+                .withEndAction {
+                    overlay.animate()
+                        .alpha(0f)
+                        .setDuration(100)
+                        .withEndAction {
+                            (window.decorView as ViewGroup).removeView(overlay)
+                        }
+                }
+
         }
         browseButton.setOnClickListener {
             val intent = Intent(this, PhotoGalleryActivity::class.java)
