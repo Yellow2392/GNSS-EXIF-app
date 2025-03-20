@@ -3,6 +3,7 @@ package com.example.exifmaster
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.hardware.Sensor
@@ -19,6 +20,7 @@ import android.util.Log
 import android.util.Size
 import android.view.TextureView
 import android.widget.Button
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
@@ -38,6 +40,7 @@ import kotlin.math.abs
 class MainActivity : AppCompatActivity(), SensorEventListener, LocationListener {
 
     private lateinit var captureButton: Button
+    private lateinit var browseButton: Button
     private lateinit var previewView: PreviewView
     private lateinit var sensorManager: SensorManager
     private lateinit var locationManager: LocationManager
@@ -88,6 +91,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LocationListener 
         setContentView(R.layout.activity_main)
 
         captureButton = findViewById(R.id.captureButton)
+        browseButton = findViewById(R.id.browseButton)
         previewView = findViewById(R.id.previewView)
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
@@ -98,7 +102,15 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LocationListener 
         requestPermissions()
 
         captureButton.setOnClickListener {
+            if (lastLocation == null) {
+                Toast.makeText(this, "Esperando señal GPS...", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
             capturePhoto()
+        }
+        browseButton.setOnClickListener {
+            val intent = Intent(this, PhotoGalleryActivity::class.java)
+            startActivity(intent)
         }
     }
 

@@ -38,6 +38,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!-- Agregar la actividad de la galería -->
+        <activity android:name=".PhotoGalleryActivity"/>
+
+        <!-- Agregar la actividad de detalles EXIF -->
+        <activity android:name=".ExifDetailsActivity" />
     </application>
 
 </manifest>
